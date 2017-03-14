@@ -21,11 +21,12 @@
 \acmPrice{15.00}
 
 \begin{document}
-\title{Apache Airavata Distributed Task Execution: Designing A Flexible Framework For Managing Distributed Workload}
+\title{Apache Airavata Distributed Task Execution}
+\subtitle{Designing A Flexible Framework For Managing Distributed Workload}
 
 \author{Gourav Shenoy}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
   \institution{Indiana University}
   \city{Bloomington} 
@@ -35,7 +36,7 @@
 
 \author{Ajinkya Dhamnaskar}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
  \institution{Indiana University}
   \city{Bloomington} 
@@ -45,7 +46,7 @@
 
 \author{Suresh Marru}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
    \institution{Indiana University}
   \city{Bloomington} 
@@ -55,7 +56,7 @@
 
 \author{Marlon Piece}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
    \institution{Indiana University}
   \city{Bloomington} 
@@ -154,7 +155,7 @@ This idea has been motivated from an understanding of the Apache Mesos \cite{apa
 \caption{Proposed Design for Distributed Task Execution.}
 \end{figure*}
 
-There is a scheduler that will receive a task execution request from the orchestrator and decide which worker to assign it to. In this context, each worker  is analogous to the current Apache Airavata GFAC module that executes the task. We can think of the worker as a collection of implementations of different tasks. E.g.,: Worker1, Worker2, Worker3, and Worker4 in the figure [x] above will have code to execute tasks A, B, C, and D respectively.
+There is a scheduler that will receive a task execution request from the orchestrator and decide which worker to assign it to. In this context, each worker  is analogous to the current Apache Airavata GFAC module that executes the task. We can think of the worker as a collection of implementations of different tasks. E.g.,: Worker1, Worker2, Worker3, and Worker4 in the figure [1] above will have code to execute tasks A, B, C, and D respectively.
 
 There are 2 concerns that arise here:
 
