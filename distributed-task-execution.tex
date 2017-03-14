@@ -164,7 +164,7 @@ There are 2 concerns that arise here:
 
 \begin{enumerate}
 \item How does the scheduler know/decide which worker to pass the task execution to?
-\item How do we upgrade a worker, say with a new task 'E' implementation, in such a manner that if something goes wrong with code for 'E', the entire worker node should not fail? In short, avoid regression testing the entire worker module.
+\item How do we upgrade a worker, say with a new task \lq E' implementation, in such a manner that if something goes wrong with code for \lq E', the entire worker node should not fail? In short, avoid regression testing the entire worker module.
 \end{enumerate}
 
 To address the first problem, we adopted a paradigm similar to Apache Aurora \cite{apacheAurora}.  Apache Aurora agents (workers) report available capabilities to the Aurora master (scheduler). In Aurora, the slave nodes constantly report back to the master how much processing power they have; accordingly, the master decides which slave to pass a new job request to. In our case, we can have the workers advertise to the scheduler which tasks they are capable of executing and the scheduler uses this information to make a decision as to which worker will execute a particular task.
@@ -204,8 +204,8 @@ Each of these accounted is for as an independent task, and for each individual e
 \subsection{DAG definitions}
 Our implementation prototype assumes two types of applications, app\textunderscore 1 and app\textunderscore 2, which have different DAG definitions as follows:
 \begin{itemize}
-\item app\textunderscore 1: input\textunderscore datastaging \textrightarrow env\textunderscore setup  \textrightarrow job\textunderscore execution  \textrightarrow job\textunderscore status\textunderscore monitoring  \textrightarrow output\textunderscore datastaging
-\item app\textunderscore 2: input\textunderscore datastaging  \textrightarrow job\textunderscore execution  \textrightarrow output\textunderscore datastaging
+\item app\textunderscore 1: input\textunderscore datastaging \textrightarrow  env\textunderscore setup  \textrightarrow  job\textunderscore execution  \textrightarrow  job\textunderscore status\textunderscore monitoring  \textrightarrow  output\textunderscore datastaging
+\item app\textunderscore 2: input\textunderscore datastaging  \textrightarrow  job\textunderscore execution  \textrightarrow  output\textunderscore datastaging
 \end{itemize}
 
 The system will receive experiment requests for either type of application, and will then follow the most expedient set of task executions to successfully complete the experiment.
