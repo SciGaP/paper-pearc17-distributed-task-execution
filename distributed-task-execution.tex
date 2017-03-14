@@ -164,12 +164,12 @@ There are 2 concerns that arise here:
 
 \begin{enumerate}
 \item How does the scheduler know/decide which worker to pass the task execution to?
-\item How do we upgrade a worker, say with a new task ‘E’ implementation, in such a manner that if something goes wrong with code for ‘E’, the entire worker node should not fail? In short, avoid regression testing the entire worker module.
+\item How do we upgrade a worker, say with a new task 'E' implementation, in such a manner that if something goes wrong with code for 'E', the entire worker node should not fail? In short, avoid regression testing the entire worker module.
 \end{enumerate}
 
 To address the first problem, we adopted a paradigm similar to Apache Aurora \cite{apacheAurora}.  Apache Aurora agents (workers) report available capabilities to the Aurora master (scheduler). In Aurora, the slave nodes constantly report back to the master how much processing power they have; accordingly, the master decides which slave to pass a new job request to. In our case, we can have the workers advertise to the scheduler which tasks they are capable of executing and the scheduler uses this information to make a decision as to which worker will execute a particular task.
 
-To address the second concern, every worker node will have task implementations bundled in separate JARs, such that if there is a problem with one task, it can be “repaired” without impacting other existing task implementations. As mentioned before, adding a new task implementation (which will need upgrades to all workers) will be simple because each worker will report back to the scheduler their capability to handle that new task (i.e., as and when upgrade finishes-incremental upgrade). Having a custom scheduler also provides us benefits such as:
+To address the second concern, every worker node will have task implementations bundled in separate JARs, such that if there is a problem with one task, it can be "repaired" without impacting other existing task implementations. As mentioned before, adding a new task implementation (which will need upgrades to all workers) will be simple because each worker will report back to the scheduler their capability to handle that new task (i.e., as and when upgrade finishes-incremental upgrade). Having a custom scheduler also provides us benefits such as:
 
 \begin{itemize}
 \item Handling corner cases - e.g.: task execution on one worker fails, then the scheduler can retry it on a different worker.
@@ -181,7 +181,7 @@ To address the second concern, every worker node will have task implementations 
 
 Our system is broken down into loosely-coupled microservices. Each microservice performs closely related functionalities and gives away work to others. As this is a microservice inspired architecture, it inherently supports scalability. Multiple instances of each microservice can be employed for load balancing. With this architecture, availability of the component can be realized by scaling microservices horizontally. The messaging infrastructure is a critical component and represents a single point of failure. Kafka \cite{kafka2014high} is being considered to solve this critical component issue.
 
-Our proposed design supports incremental upgrades; if a new task execution capability is added to a worker, other workers will continue to process task execution requests while the upgrade is in progress. Once the upgrade completes, this worker will now be able to accept and process requests for the new task type. Newly added capabilities are completely independent of existing ones, so the system does not require tedious regression testing. Also, these new capabilities can be incrementally replicated across multiple workers. As capabilities are added, DAG’s will be altered accordingly.  In other words, the system remains agnostic to any new implementations.
+Our proposed design supports incremental upgrades; if a new task execution capability is added to a worker, other workers will continue to process task execution requests while the upgrade is in progress. Once the upgrade completes, this worker will now be able to accept and process requests for the new task type. Newly added capabilities are completely independent of existing ones, so the system does not require tedious regression testing. Also, these new capabilities can be incrementally replicated across multiple workers. As capabilities are added, DAG\textquotesingle s will be altered accordingly.  In other words, the system remains agnostic to any new implementations.
 
 \section{IMPLEMENTATION \& EVALUATION}
 
@@ -193,19 +193,19 @@ From our preliminary analysis we can assert that the best solutions may not be g
 List of tasks in a typical scientific application:
 \begin{itemize}
 \item environment setup - creating directories and load modules for a job
-\item staging input file – stage user input files on remote cluster
-\item job execution – execute job execution commands
-\item job status monitoring – monitor status of a job until it finishes 
-\item output data staging – after successful execution of a job transfer outputs files back in local environment
+\item staging input file - stage user input files on remote cluster
+\item job execution - execute job execution commands
+\item job status monitoring - monitor status of a job until it finishes 
+\item output data staging - after successful execution of a job transfer outputs files back in local environment
 \end{itemize}
 
 Each of these accounted is for as an independent task, and for each individual experiment, these tasks are bundled into a DAG. An experiment refers to a user request to run an application on a remote machine. Each component of our design is explained below with reference to example task definitions listed above.
 
 \subsection{DAG definitions}
-Our implementation prototype assumes two types of applications, app_1 and app_2, which have different DAG definitions as follows:
+Our implementation prototype assumes two types of applications, app\textunderscore 1 and app\textunderscore 2, which have different DAG definitions as follows:
 \begin{itemize}
-\item app_1: input_datastaging ? env_setup ? job_execution ? job_status_monitoring ? output_datastaging
-\item app_2: input_datastaging ? job_execution ? output_datastaging
+\item app\textunderscore 1: input\textunderscore datastaging \textrightarrow env\textunderscore setup  \textrightarrow job\textunderscore execution  \textrightarrow job\textunderscore status\textunderscore monitoring  \textrightarrow output\textunderscore datastaging
+\item app\textunderscore 2: input\textunderscore datastaging  \textrightarrow job\textunderscore execution  \textrightarrow output\textunderscore datastaging
 \end{itemize}
 
 The system will receive experiment requests for either type of application, and will then follow the most expedient set of task executions to successfully complete the experiment.
@@ -219,7 +219,7 @@ The orchestrator receives an experiment request, which indicates the type of app
 \item The scheduling time - by default the application will be scheduled to run immediately.
 \end{itemize}
 
-The orchestrator retrieves the appropriate DAG definition for the application, and constructs a \textit{SchedulingRequest} object for each task in the DAG. This \textit{SchedulingRequest} object contains an important \textit{TaskContext} parameter which encapsulates details required by the Scheduler such as, scheduling_time, scheduling_priority, and task related information which might include application and remote machine details, and inputs to the application.
+The orchestrator retrieves the appropriate DAG definition for the application, and constructs a \textit{SchedulingRequest} object for each task in the DAG. This \textit{SchedulingRequest} object contains an important \textit{TaskContext} parameter which encapsulates details required by the Scheduler such as, scheduling\textunderscore time, scheduling\textunderscore priority, and task related information which might include application and remote machine details, and inputs to the application.
 
 The orchestrator then publishes this object as a message to the Scheduler via RabbitMQ broker to initiate execution of the task. The orchestrator tracks the state of the each task - per experiment - as it progresses through the DAG, and is responsible for handling errors and failures in task execution.
 
@@ -240,7 +240,7 @@ Each of the components described above, is deployed as an independent microservi
 \end{itemize}
 
 \begin{figure*}
-\includegraphics[height=3in, width=3.5in]{figures/scheduler-pull-mechanism.pdf}
+\includegraphics[height=3in, width=7in]{figures/scheduler-pull-mechanism.pdf}
 \caption{Scheduler-Worker interaction using RabbitMQ messaging queues.}
 \end{figure*}
 
@@ -252,7 +252,7 @@ Each of the components described above, is deployed as an independent microservi
 \end{itemize}
 
 \begin{figure*}
-\includegraphics[height=3in, width=3.5in]{figures/scheduler-push-mechanism.pdf}
+\includegraphics[height=3in, width=7in]{figures/scheduler-push-mechanism.pdf}
 \caption{Scheduler-Worker interaction using Gossip Protocol}
 \end{figure*}
 
@@ -269,7 +269,7 @@ AKKA uses an Actor-Director model to provide elegant solutions in a distributed 
 \section{CONCLUSIONS AND FUTURE WORK}
 We have been able to come up with a flexible solution for distributed task execution. Considering its advantages, we are hoping to integrate this design in current Apache Airavata architecture. However, before Airavata code can absorb this framework it needs to go through certain improvements. We are working through the prototype to make these improvements. 
 
-In its current capacity, implemented prototype supports pull mechanism between scheduler and workers. Here, we are depending on messaging infrastructure (RabbitMQ) for delegating tasks to workers. This approach works well, but as we move ahead, systems might need to absorb surprising business demands.  Therefore, we prefer to retain control over task delegation rather than depending on third party technologies. The push mechanism would give better control over workers and task execution. One can think of using a matchmaking algorithm used by HTCondor where workers can advertise their capabilities in terms of task implementation, available memory, current load, CPU speed, etc.  In these situations the scheduler can match task requirements with available workers and assign tasks accordingly. Also, the scheduler can monitor node heartbeats to maintain workers’ states and can spin up new instances as required. Again, one can think of gossip protocol to communicate state and resource information. Serf is a widely used gossip protocol which inherently supports scalability and fault tolerance. 
+In its current capacity, implemented prototype supports pull mechanism between scheduler and workers. Here, we are depending on messaging infrastructure (RabbitMQ) for delegating tasks to workers. This approach works well, but as we move ahead, systems might need to absorb surprising business demands.  Therefore, we prefer to retain control over task delegation rather than depending on third party technologies. The push mechanism would give better control over workers and task execution. One can think of using a matchmaking algorithm used by HTCondor where workers can advertise their capabilities in terms of task implementation, available memory, current load, CPU speed, etc.  In these situations the scheduler can match task requirements with available workers and assign tasks accordingly. Also, the scheduler can monitor node heartbeats to maintain worker\textquotesingle s states and can spin up new instances as required. Again, one can think of gossip protocol to communicate state and resource information. Serf is a widely used gossip protocol which inherently supports scalability and fault tolerance. 
 
 Also in this prototype we have used RabbitMQ for communication between Orchestrator and Scheduler. Considering it could be a single point of failure one can think of using a more robust, scalable and fault tolerant messaging infrastructure. Kafka is a very good contender, and we are planning to come up with better communication infrastructure which would satisfy the needs of scalability and fault-tolerance, yet give a very good control over message flow.   
 
