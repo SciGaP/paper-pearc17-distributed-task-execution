@@ -206,6 +206,20 @@ Our implementation prototype assumes two types of applications, app\textundersco
 
 The system will receive experiment requests for either type of application, and will then follow the most expedient set of task executions to successfully complete the experiment.
 
+\begin{figure*}[!ht]
+     \begin{minipage}[l]{1.0\columnwidth}
+         \centering
+         \includegraphics[height=3in, width=3.5in]{figures/scheduler-pull-mechanism.pdf}
+         \caption{Scheduler-Worker interaction using RabbitMQ messaging queues. (Pull Mechanism)}
+     \end{minipage}\label{mage:pull-mechanism}
+     \hfill{}
+     \begin{minipage}[r]{1.0\columnwidth}
+         \centering
+         \includegraphics[height=3in, width=3.5in]{figures/scheduler-push-mechanism.pdf}
+        \caption{Scheduler-Worker interaction using Gossip Protocol. (Push Mechanism)}
+     \end{minipage}\label{image:push-mechanism}
+\end{figure*}
+
 \subsection{Orchestrator}
 The orchestrator receives an experiment request, which indicates the type of application to run on the remote machine, along with other parameters such as:
 \begin{itemize}
@@ -235,22 +249,12 @@ Each of the components described above, is deployed as an independent microservi
 \item The scheduler receives a response from a Worker after it completes execution of the task assigned - success or failure - and relays it to the Orchestrator.
 \end{itemize}
 
-\begin{figure*}
-\includegraphics[height=3in, width=3.5in]{figures/scheduler-pull-mechanism.pdf}
-\caption{Scheduler-Worker interaction using RabbitMQ messaging queues.}
-\end{figure*}
-
 \subsubsection{Push Mechanism - Using Gossip Protocol}
 \begin{itemize}
 \item A much more intelligent scheduler which constantly receives updates from every worker - using gossip protocol - about the workers existence and capabilities \cite{kermarrec2007gossiping}.
 \item Scheduler uses this information to make informed decision about which worker to assign a task to, upon receiving a SchedulingRequest from the Orchestrator.
 \item Based on the attributes received from the worker, the scheduler can be configured to use any scheduling algorithm to decide task assignment to a worker.
 \end{itemize}
-
-\begin{figure*}
-\includegraphics[height=3in, width=3.5in]{figures/scheduler-push-mechanism.pdf}
-\caption{Scheduler-Worker interaction using Gossip Protocol}
-\end{figure*}
 
 \section{RELATED WORK}
 
