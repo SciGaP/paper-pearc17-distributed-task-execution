@@ -21,11 +21,12 @@
 \acmPrice{15.00}
 
 \begin{document}
-\title{Apache Airavata Distributed Task Execution: Designing A Flexible Framework For Managing Distributed Workload}
+\title{Apache Airavata Distributed Task Execution}
+\subtitle{Designing A Flexible Framework For Managing Distributed Workload}
 
 \author{Gourav Shenoy}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
   \institution{Indiana University}
   \city{Bloomington} 
@@ -35,7 +36,7 @@
 
 \author{Ajinkya Dhamnaskar}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
  \institution{Indiana University}
   \city{Bloomington} 
@@ -45,7 +46,7 @@
 
 \author{Suresh Marru}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
    \institution{Indiana University}
   \city{Bloomington} 
@@ -55,7 +56,7 @@
 
 \author{Marlon Piece}
 \affiliation{
-  \institution{Science Gateway Research Center}
+  \institution{Science Gateways Research Center}
   \institution{Pervasive Technology Institute}
    \institution{Indiana University}
   \city{Bloomington} 
@@ -154,7 +155,7 @@ This idea has been motivated from an understanding of the Apache Mesos \cite{apa
 \caption{Proposed Design for Distributed Task Execution.}
 \end{figure*}
 
-There is a scheduler that will receive a task execution request from the orchestrator and decide which worker to assign it to. In this context, each worker  is analogous to the current Apache Airavata GFAC module that executes the task. We can think of the worker as a collection of implementations of different tasks. E.g.,: Worker1, Worker2, Worker3, and Worker4 in the figure [x] above will have code to execute tasks A, B, C, and D respectively.
+There is a scheduler that will receive a task execution request from the orchestrator and decide which worker to assign it to. In this context, each worker  is analogous to the current Apache Airavata GFAC module that executes the task. We can think of the worker as a collection of implementations of different tasks. E.g.,: Worker1, Worker2, Worker3, and Worker4 in the figure [1] above will have code to execute tasks A, B, C, and D respectively.
 
 There are 2 concerns that arise here:
 
@@ -229,15 +230,51 @@ The orchestrator receives an experiment request, which indicates the type of app
 \item The scheduling time - by default the application will be scheduled to run immediately.
 \end{itemize}
 
-The orchestrator retrieves the appropriate DAG definition for the application, and constructs a \textit{SchedulingRequest} object for each task in the DAG. This \textit{SchedulingRequest} object contains an important \textit{TaskContext} parameter which encapsulates details required by the Scheduler such as, scheduling\textunderscore time, scheduling\textunderscore priority, and task related information which might include application and remote machine details, and inputs to the application. \newline
+When experiment is submitted, orchestrator retrieves the appropriate DAG definition from experiment type, and constructs a \textit{SchedulingRequest} object for each task in the DAG. This \textit{SchedulingRequest} object contains an important \textit{TaskContext} parameter which encapsulates details required by the Scheduler such as, scheduling\textunderscore time, scheduling\textunderscore priority, and task related information which might include application and remote machine details, and inputs to the application. \newline
 
-The orchestrator then publishes this object as a message to the Scheduler via RabbitMQ broker to initiate execution of the task. The orchestrator tracks the state of the each task - per experiment - as it progresses through the DAG, and is responsible for handling errors and failures in task execution.
+\begin{figure*}[t]
+     \begin{minipage}[l]{1\columnwidth}
+         \centering
+         \includegraphics[height=2in, width=2.5in]{figures/node-structure.png}
+         \caption{Node Structure}
+     \end{minipage}\label{mage:node-structure}
+     \hfill{}
+ \end{figure*}
+
+We are using Neo4j graph databases for storing DAGs. Neo4j allows to store properties in the form of key-value pairs in each node. Based on experiment, a DAG is fetched from the database and a concrete version of the DAG is created. Thus when experiment execution starts, we have concrete version of original DAG with experiment id being the relationship type between nodes which is enough to execute entire experiment. The concrete version of the DAG has nodes filled with scheduling request and required metadata. Each node has an id, task type, \textit{SchedulingRequest} in binary format and a boolean flag isExecuted which marks the successful execution of the task. \newline
+
+Zookeeper is used to store currently executing experiments. ZK maintains nodes with experiment id as a name. Whenever experiment completes, corresponding ZK node is deleted. So even if system crashes we can recover experiments which were not completely executed.
+In case of recovery, DAG database can be queried to get next node that needs to be executed from the DAG, as mentioned earlier this node has all the required information for task execution. Once particular task is executed, node is marked by setting isExecuted = \lq true\rq. In this way, DAG is executed until last node in a DAG is executed when we mark experiment as completed. In case of recovery, DAG is queried to get last incompelete node (where isExcecuted=\lq false\rq) and execution is restarted from there. Audit trail of individual tasks and entire experiment is also maintained in MySQL tables throughout the lifecycle. \newline
+
+Orchestrator uses concrete DAG to publishes \textit{SchedulingRequest} as a message to the Scheduler via RabbitMQ broker to initiate execution of the task. The orchestrator tracks the state of the each task - per experiment - as it progresses through the DAG, and is responsible for handling errors and failures in task execution.
 
 \subsection{Scheduler}
 The scheduler receives \textit{SchedulingRequest} from the Orchestrator. It extracts \textit{TaskContext} and schedules it based on associated priority and execution timestamp. The scheduler maintains separate RabbitMQ queues for each type of a task. Based on task type, \textit{TaskContext} object is queued in respective queues.
 
 \subsection{Worker}
 Worker is a  machine where tasks are executed. Each task is implemented in JAVA and bundled as a jar. These jars are deployed on the worker. Every worker may not be equipped with all the capabilities (tasks). Based on installed capabilities, worker listens to a batch queue for incoming tasks. When worker takes up a task from a queue it is no longer available for other workers that way only one worker reacts on a task. If worker fails to acknowledge, \textit{TaskContext} gets queued again for other workers. Workers are responsible executing instructions and transferring files to and from remote computing resources. It is designed in such  away that new capabilities can be added as a jar without hampering existing ones. Any new capability eventually can be replicated on multiple workers. 
+
+\subsection{User Interface}
+We have created WorkloadAPI module gives an application interface. We have created simple user interface which can be used to submit and monitor experiments. Once a job is submitted, its lifecyle can be monitored right from submission through completion or failure. It gives an interactive way to deal with experiments. As of now this component is implemented just for monitoring and submission purpose, the same can be enhanced to accommodate various use cases such and cancel and recover experiments.  
+
+\subsection{Deployment}
+We discussed the validity, flexibility and robustness of the proposed framework. Now, it is important to consider deployment aspect for the same. We chose distributed operating system also known as Datacenter operation system (DC/OS)\cite{dcos} based on apache Mesos distributed system kernel. It is a distributed infrastructure as a service which abstracts out multiple machines as if they were a single computer. It facilitates resource management, process placement, inter-process communication and simplifies the installation and management of distributed services. This environment is best suitable for our framework to ensure load handling, resource utilization and fault tolerance.
+\begin{itemize}
+\item RabbitMQ
+\item MySQL
+\item Zookeeper
+\item Orchestrator
+\item Scheduler
+\item Worker
+\item WorkloadAPI
+\end{itemize}
+
+We have created DC/OS cluster with default template using \textit{Amazon cloud formation}, which has 6 machines out of which one is public facing. 
+The services need to be containerized before running on DC/OS. We created docker images for these services, DC/OS takes these docker images and run it on a cluster. Worker image is parameterized and can be configured to start individual or multiple tasks. Here, end users are completely unaware of machines on which different services are deployed.\newline
+
+These services can be configured to scale up and down based on load, for that matter DC/OS shuts or spin ups instances as required and thereby saves resources and cost.  DC/OS employs Health Check module to monitor services, if any of the service goes down it restarts that service transparently. 
+In our case, multiple instances of tasks can be deployed to balance load, if any service is taking heat, DC/OS can identify the same and scale that service horizontally. \newline
+
 
 \subsection {Scheduler - Worker Interactions}
 Each of the components described above, is deployed as an independent microservice. Multiple instances of these components can be employed for fault tolerance and load balancing. RabbitMQ serves as message broker and flows data from one microservice to another. Specifically, workers can be scaled horizontally to distribute load; which makes interaction between the scheduler and worker one of the most important aspects of our design for successful task execution. We have implemented pull mechanism; which relies on RabbitMQ \cite{sadooghi2014achieving}. We could have accomplished the same things using a push model, which would give better control over job execution, both these designs are explained below.
