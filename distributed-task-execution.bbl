@@ -1,0 +1,277 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{00}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{{\tt DOI:}\penalty0{#1}\ }
+  \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       #1{#1}          \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{??}{akk}{2017}]%
+        {akka}
+ \bibinfo{year}{2017}\natexlab{}.
+\newblock \bibinfo{title}{Akka}.
+\newblock \bibinfo{howpublished}{http://akka.io}.   (\bibinfo{year}{2017}).
+\newblock
+\newblock
+\shownote{Accessed: 2017-03-13.}
+
+
+\bibitem[\protect\citeauthoryear{??}{apa}{2017a}]%
+        {apacheAurora}
+ \bibinfo{year}{2017}\natexlab{a}.
+\newblock \bibinfo{title}{Apache Aurora}.
+\newblock \bibinfo{howpublished}{http://aurora.apache.org}.
+  (\bibinfo{year}{2017}).
+\newblock
+\newblock
+\shownote{Accessed: 2017-03-13.}
+
+
+\bibitem[\protect\citeauthoryear{??}{apa}{2017b}]%
+        {apacheMesos}
+ \bibinfo{year}{2017}\natexlab{b}.
+\newblock \bibinfo{title}{Apache Mesos}.
+\newblock \bibinfo{howpublished}{http://mesos.apache.org}.
+  (\bibinfo{year}{2017}).
+\newblock
+\newblock
+\shownote{Accessed: 2017-03-13.}
+
+
+\bibitem[\protect\citeauthoryear{??}{rab}{2017}]%
+        {rabbitMQ}
+ \bibinfo{year}{2017}\natexlab{}.
+\newblock \bibinfo{title}{RabbitMQ}.
+\newblock \bibinfo{howpublished}{https://www.rabbitmq.com/}.
+  (\bibinfo{year}{2017}).
+\newblock
+\newblock
+\shownote{Accessed: 2017-03-13.}
+
+
+\bibitem[\protect\citeauthoryear{Burns and Oppenheimer}{Burns and
+  Oppenheimer}{2016}]%
+        {burns2016design}
+\bibfield{author}{\bibinfo{person}{Brendan Burns} {and} \bibinfo{person}{David
+  Oppenheimer}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Design patterns for container-based distributed
+  systems}. In \bibinfo{booktitle}{{\em 8th USENIX Workshop on Hot Topics in
+  Cloud Computing (HotCloud 16)}}. USENIX Association.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Casavant and Kuhl}{Casavant and Kuhl}{1988}]%
+        {casavant1988taxonomy}
+\bibfield{author}{\bibinfo{person}{Thomas~L. Casavant} {and}
+  \bibinfo{person}{Jon~G. Kuhl}.} \bibinfo{year}{1988}\natexlab{}.
+\newblock \showarticletitle{A taxonomy of scheduling in general-purpose
+  distributed computing systems}.
+\newblock \bibinfo{journal}{{\em IEEE Transactions on software engineering\/}}
+  \bibinfo{volume}{14}, \bibinfo{number}{2} (\bibinfo{year}{1988}),
+  \bibinfo{pages}{141--154}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Coleman}{Coleman}{2001}]%
+        {coleman2001implementation}
+\bibfield{author}{\bibinfo{person}{Nicholas Coleman}.}
+  \bibinfo{year}{2001}\natexlab{}.
+\newblock \showarticletitle{An implementation of matchmaking analysis in
+  condor}.
+\newblock \bibinfo{journal}{{\em Masters' Project report, University of
+  Wisconsin, Madison\/}} (\bibinfo{year}{2001}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Coleman, Raman, Livny, and Solomon}{Coleman
+  et~al\mbox{.}}{2003}]%
+        {coleman2003distributed}
+\bibfield{author}{\bibinfo{person}{Nicholas Coleman}, \bibinfo{person}{Rajesh
+  Raman}, \bibinfo{person}{Miron Livny}, {and} \bibinfo{person}{Marvin
+  Solomon}.} \bibinfo{year}{2003}\natexlab{}.
+\newblock \bibinfo{booktitle}{{\em Distributed policy management and
+  comprehension with classified advertisements}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport}. \bibinfo{institution}{Technical
+  Report UW-CS-TR-1481, University of Wisconsin-Madison Computer Sciences
+  Department}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hey and Trefethen}{Hey and Trefethen}{2005}]%
+        {hey2005cyberinfrastructure}
+\bibfield{author}{\bibinfo{person}{Tony Hey} {and} \bibinfo{person}{Anne~E
+  Trefethen}.} \bibinfo{year}{2005}\natexlab{}.
+\newblock \showarticletitle{Cyberinfrastructure for e-Science}.
+\newblock \bibinfo{journal}{{\em Science\/}} \bibinfo{volume}{308},
+  \bibinfo{number}{5723} (\bibinfo{year}{2005}), \bibinfo{pages}{817--821}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kafka}{Kafka}{2014}]%
+        {kafka2014high}
+\bibfield{author}{\bibinfo{person}{Apache Kafka}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{A high-throughput, distributed messaging system}.
+\newblock \bibinfo{journal}{{\em URL: kafka. apache. org as of\/}}
+  \bibinfo{volume}{5}, \bibinfo{number}{1} (\bibinfo{year}{2014}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kermarrec and Van~Steen}{Kermarrec and
+  Van~Steen}{2007}]%
+        {kermarrec2007gossiping}
+\bibfield{author}{\bibinfo{person}{Anne-Marie Kermarrec} {and}
+  \bibinfo{person}{Maarten Van~Steen}.} \bibinfo{year}{2007}\natexlab{}.
+\newblock \showarticletitle{Gossiping in distributed systems}.
+\newblock \bibinfo{journal}{{\em ACM SIGOPS Operating Systems Review\/}}
+  \bibinfo{volume}{41}, \bibinfo{number}{5} (\bibinfo{year}{2007}),
+  \bibinfo{pages}{2--7}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Marru, Gunathilake, Herath, Tangchaisin,
+  Pierce, Mattmann, Singh, Gunarathne, Chinthaka, Gardler, et~al\mbox{.}}{Marru
+  et~al\mbox{.}}{2011}]%
+        {marru2011apache}
+\bibfield{author}{\bibinfo{person}{Suresh Marru}, \bibinfo{person}{Lahiru
+  Gunathilake}, \bibinfo{person}{Chathura Herath}, \bibinfo{person}{Patanachai
+  Tangchaisin}, \bibinfo{person}{Marlon Pierce}, \bibinfo{person}{Chris
+  Mattmann}, \bibinfo{person}{Raminder Singh}, \bibinfo{person}{Thilina
+  Gunarathne}, \bibinfo{person}{Eran Chinthaka}, \bibinfo{person}{Ross
+  Gardler}, {and} \bibinfo{person}{others}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Apache airavata: a framework for distributed
+  applications and computational workflows}. In \bibinfo{booktitle}{{\em
+  Proceedings of the 2011 ACM workshop on Gateway computing environments}}.
+  ACM, \bibinfo{pages}{21--28}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Marru, Pierce, Pamidighantam, and
+  Wimalasena}{Marru et~al\mbox{.}}{2015}]%
+        {marru2015apache}
+\bibfield{author}{\bibinfo{person}{Suresh Marru}, \bibinfo{person}{Marlon
+  Pierce}, \bibinfo{person}{Sudhakar Pamidighantam}, {and}
+  \bibinfo{person}{Chathuri Wimalasena}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Apache Airavata as a laboratory: architecture and
+  case study for component-based gateway middleware}. In
+  \bibinfo{booktitle}{{\em Proceedings of the 1st Workshop on The Science of
+  Cyberinfrastructure: Research, Experience, Applications and Models}}. ACM,
+  \bibinfo{pages}{19--26}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Perera, Marru, and Herath}{Perera
+  et~al\mbox{.}}{2008}]%
+        {perera2008workflow}
+\bibfield{author}{\bibinfo{person}{Srinath Perera}, \bibinfo{person}{Suresh
+  Marru}, {and} \bibinfo{person}{Chathura Herath}.}
+  \bibinfo{year}{2008}\natexlab{}.
+\newblock \showarticletitle{Workflow infrastructure for multi-scale science
+  gateways}. In \bibinfo{booktitle}{{\em TeraGrid Conference}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Pierce, Marru, Gunathilake, Wijeratne, Singh,
+  Wimalasena, Ratnayaka, and Pamidighantam}{Pierce et~al\mbox{.}}{2015}]%
+        {pierce2015apache}
+\bibfield{author}{\bibinfo{person}{Marlon~E Pierce}, \bibinfo{person}{Suresh
+  Marru}, \bibinfo{person}{Lahiru Gunathilake}, \bibinfo{person}{Don~Kushan
+  Wijeratne}, \bibinfo{person}{Raminder Singh}, \bibinfo{person}{Chathuri
+  Wimalasena}, \bibinfo{person}{Shameera Ratnayaka}, {and}
+  \bibinfo{person}{Sudhakar Pamidighantam}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Apache Airavata: design and directions of a science
+  gateway framework}.
+\newblock \bibinfo{journal}{{\em Concurrency and Computation: Practice and
+  Experience\/}} \bibinfo{volume}{27}, \bibinfo{number}{16}
+  (\bibinfo{year}{2015}), \bibinfo{pages}{4282--4291}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Sadooghi, Palur, Anthony, Kapur, Belagodu,
+  Purandare, Ramamurty, Wang, and Raicu}{Sadooghi et~al\mbox{.}}{2014}]%
+        {sadooghi2014achieving}
+\bibfield{author}{\bibinfo{person}{Iman Sadooghi}, \bibinfo{person}{Sandeep
+  Palur}, \bibinfo{person}{Ajay Anthony}, \bibinfo{person}{Isha Kapur},
+  \bibinfo{person}{Karthik Belagodu}, \bibinfo{person}{Pankaj Purandare},
+  \bibinfo{person}{Kiran Ramamurty}, \bibinfo{person}{Ke Wang}, {and}
+  \bibinfo{person}{Ioan Raicu}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{Achieving efficient distributed scheduling with
+  message queues in the cloud for many-task computing and high-performance
+  computing}. In \bibinfo{booktitle}{{\em Cluster, Cloud and Grid Computing
+  (CCGrid), 2014 14th IEEE/ACM International Symposium on}}. IEEE,
+  \bibinfo{pages}{404--413}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Tannenbaum, Wright, Miller, and
+  Livny}{Tannenbaum et~al\mbox{.}}{2001}]%
+        {tannenbaum2001condor}
+\bibfield{author}{\bibinfo{person}{Todd Tannenbaum}, \bibinfo{person}{Derek
+  Wright}, \bibinfo{person}{Karen Miller}, {and} \bibinfo{person}{Miron
+  Livny}.} \bibinfo{year}{2001}\natexlab{}.
+\newblock \showarticletitle{Condor: a distributed job scheduler}. In
+  \bibinfo{booktitle}{{\em Beowulf cluster computing with Linux}}. MIT press,
+  \bibinfo{pages}{307--350}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Thain, Tannenbaum, and Livny}{Thain
+  et~al\mbox{.}}{2005}]%
+        {thain2005distributed}
+\bibfield{author}{\bibinfo{person}{Douglas Thain}, \bibinfo{person}{Todd
+  Tannenbaum}, {and} \bibinfo{person}{Miron Livny}.}
+  \bibinfo{year}{2005}\natexlab{}.
+\newblock \showarticletitle{Distributed computing in practice: the Condor
+  experience}.
+\newblock \bibinfo{journal}{{\em Concurrency and computation: practice and
+  experience\/}} \bibinfo{volume}{17}, \bibinfo{number}{2-4}
+  (\bibinfo{year}{2005}), \bibinfo{pages}{323--356}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Zaharia, Chowdhury, Franklin, Shenker, and
+  Stoica}{Zaharia et~al\mbox{.}}{2010}]%
+        {zaharia2010spark}
+\bibfield{author}{\bibinfo{person}{Matei Zaharia}, \bibinfo{person}{Mosharaf
+  Chowdhury}, \bibinfo{person}{Michael~J Franklin}, \bibinfo{person}{Scott
+  Shenker}, {and} \bibinfo{person}{Ion Stoica}.}
+  \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Spark: Cluster Computing with Working Sets.}
+\newblock \bibinfo{journal}{{\em HotCloud\/}} \bibinfo{volume}{10},
+  \bibinfo{number}{10-10} (\bibinfo{year}{2010}), \bibinfo{pages}{95}.
+\newblock
+
+
+\end{thebibliography}

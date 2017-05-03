@@ -212,7 +212,7 @@ The system will receive experiment requests for either type of application, and 
          \centering
          \includegraphics[height=3in, width=3.5in]{figures/scheduler-pull-mechanism.pdf}
          \caption{Scheduler-Worker interaction using RabbitMQ messaging queues. (Pull Mechanism)}
-     \end{minipage}\label{mage:pull-mechanism}
+     \end{minipage}\label{image:pull-mechanism}
      \hfill{}
      \begin{minipage}[r]{1.0\columnwidth}
          \centering
@@ -237,7 +237,7 @@ When experiment is submitted, orchestrator retrieves the appropriate DAG definit
          \centering
          \includegraphics[height=2in, width=2.5in]{figures/node-structure.png}
          \caption{Node Structure}
-     \end{minipage}\label{mage:node-structure}
+     \end{minipage}\label{image:node-structure}
      \hfill{}
  \end{figure*}
 
@@ -257,6 +257,11 @@ Worker is a  machine where tasks are executed. Each task is implemented in JAVA 
 \subsection{User Interface}
 We have created WorkloadAPI module gives an application interface. We have created simple user interface which can be used to submit and monitor experiments. Once a job is submitted, its lifecyle can be monitored right from submission through completion or failure. It gives an interactive way to deal with experiments. As of now this component is implemented just for monitoring and submission purpose, the same can be enhanced to accommodate various use cases such and cancel and recover experiments.  
 
+\begin{figure*}
+\includegraphics[height=3in, width=7in]{figures/distributed-tax-ex-ui.png}
+\caption{View of the User Interface deployed as a Java web-app container on DC/OS.}
+\end{figure*}
+ 
 \subsection{Deployment}
 We discussed the validity, flexibility and robustness of the proposed framework. Now, it is important to consider deployment aspect for the same. We chose distributed operating system also known as Datacenter operation system (DC/OS)\cite{dcos} based on apache Mesos distributed system kernel. It is a distributed infrastructure as a service which abstracts out multiple machines as if they were a single computer. It facilitates resource management, process placement, inter-process communication and simplifies the installation and management of distributed services. This environment is best suitable for our framework to ensure load handling, resource utilization and fault tolerance.
 \begin{itemize}
@@ -268,6 +273,20 @@ We discussed the validity, flexibility and robustness of the proposed framework.
 \item Worker
 \item WorkloadAPI
 \end{itemize}
+
+\begin{figure*}[!ht]
+     \begin{minipage}[l]{1.0\columnwidth}
+         \centering
+         \includegraphics[height=3in, width=3.5in]{figures/dcos-dashboard.png}
+         \caption{The DC/OS Dashboard for Cluster installed on AWS. The services and nodes health status is displayed. }
+     \end{minipage}\label{image:dcos-dashboard}
+     \hfill{}
+     \begin{minipage}[r]{1.0\columnwidth}
+         \centering
+         \includegraphics[height=3in, width=3.5in]{figures/dcos-services.png}
+        \caption{A view of the services (docker containers) installed in our DC/OS cluster.}
+     \end{minipage}\label{image:dcos-services}
+\end{figure*}
 
 We have created DC/OS cluster with default template using \textit{Amazon cloud formation}, which has 6 machines out of which one is public facing. 
 The services need to be containerized before running on DC/OS. We created docker images for these services, DC/OS takes these docker images and run it on a cluster. Worker image is parameterized and can be configured to start individual or multiple tasks. Here, end users are completely unaware of machines on which different services are deployed.\newline
