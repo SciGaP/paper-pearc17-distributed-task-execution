@@ -272,7 +272,7 @@ We discussed the validity, flexibility and robustness of the proposed framework.
 We have created DC/OS cluster with default template using \textit{Amazon cloud formation}, which has 6 machines out of which one is public facing. 
 The services need to be containerized before running on DC/OS. We created docker images for these services, DC/OS takes these docker images and run it on a cluster. Worker image is parameterized and can be configured to start individual or multiple tasks. Here, end users are completely unaware of machines on which different services are deployed.\newline
 
-These services can be configured to scale up and down based on load, for that matter DC/OS shuts or spin ups instances as required and thereby saves resources and cost.  DC/OS employs Health Check module to monitor services, if any of the service goes down it restarts that service transparently. 
+These services can be configured to scale up and down based on load, for that matter DC/OS shuts or spin ups instances as required and thereby saves resources and cost.  DC/OS employs Health Check module to monitor services, if any of the services goes down it restarts that service transparently. 
 In our case, multiple instances of tasks can be deployed to balance load, if any service is taking heat, DC/OS can identify the same and scale that service horizontally. \newline
 
 
