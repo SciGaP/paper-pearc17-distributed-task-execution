@@ -101,6 +101,7 @@ Distributed task execution is a well studied problem in computer science, variou
 Figure 1 illustrates the basic approach. The Orchestrator and Task Executor (right) communicate through a message bus.  The Task Executor is implemented as a collection of ``workers'', with each worker implementing the ability to handle tasks of different types. Workers subscribe to the appropriate publication channels.
 
 \begin{figure*}
+\centering
 \includegraphics[height=2.2in, width=4.8 in]{figures/figure1.pdf}
 \caption{The Orchestrator and Task Executor components communicate through a message bus that routes messages to workers following a publish-subscribe pattern. Workers 1-3 are capable of performing some subset of the tasks A, B, C, D, and E shown.}
 \end{figure*}
@@ -111,7 +112,7 @@ For the orchestrator, there are two considerations that arise here:
 \item How do we upgrade a worker, say with a new task 'E' implementation, in such a manner that if something goes wrong with code for 'E', the entire worker node should not fail. In short, avoid regression testing the entire worker module.
 \end{itemize}
 
-To address the first consideration, we adopted a paradigm similar to Apache Aurora \cite{apacheAurora}.  Apache Aurora agents (workers) report available capabilities to the Aurora master (scheduler). In Aurora, the slave nodes constantly report back to the master how much processing power they have; accordingly, the master decides which slave to pass a new job request to. In our case, we can have the workers advertise to the scheduler which tasks they are capable of executing and the scheduler uses this information to make a decision as to which worker will execute a particular task.
+To address the first consideration, we adopted a paradigm similar to Apache Aurora \cite{apacheAurora}.  Apache Aurora agents (workers) report available capabilities to the Aurora master (scheduler). In Aurora, the slave nodes constantly report back to the master how much processing power they have; accordingly, the master decides which slave to pass a new job request to. In our case, we can have the workers advertise to the orchestrator which tasks they are capable of executing and the orchestrator uses this information to make a decision as to which worker will execute a particular task.
 Messaging systems such as those based on the AMQP specification can be used to offload orchestrator from scheduling part. We can delegate most of the responsibilities like service discovery, fault tolerance, and distributed coordination to a message infrastructure. This does mean however that the messaging system must be a highly available part of the system. Such coordination can also be accomplished with  frameworks like Apache Zookeeper \cite{hunt2010zookeeper} or Consul \cite{vargo2016consul}. We choose messaging approach implemented with RabbitMQ. 
 To address the second consideration, every worker node can have independent task modules, such that if there is a problem with one task, it can be repaired without impacting other existing task implementations. Adding a new task implementation is simplified because each worker will report back to the orchestrator their capability to handle that new task. Likewise, new workers with new capabilities can be added to the system.  
 
@@ -132,11 +133,12 @@ Our proposed design supports incremental upgrades; if a new task execution capab
 
 \section{IMPLEMENTATION AND EVALUATION}
 
-\subsection{Prototype for implementation}
+\subsection{Implementation}
 There is an obvious correlation between microservice communication and its impact on how the microservice performs the work assigned under specific circumstances. The design goal is to make sure we have maximum independence between microservices, and to fully investigate the workflow pattern in which these microservices will operate so we can find the right balance between availability and consistency.
 The design is influenced by but not limited to specific task execution patterns followed in scientific applications.   We consider next a common pattern. 
 
 \begin{figure*}
+\centering
 \includegraphics[height=0.8in, width=4.8 in]{figures/figure2.pdf}
 \caption{List of tasks in a typical scientific application running on an HPC resource.}
 \end{figure*}
@@ -169,7 +171,8 @@ The orchestrator then publishes this TaskContext as a message via RabbitMQ broke
 We implement the abstract Task Execution component as a collection of workers. A worker can be equipped with one or more tasks. Based on installed capabilities, workers listen to message queues for incoming messages. When one worker takes up a task from a queue it is no longer available for other workers so that only one worker reacts to a task. If the worker fails send an acknowledgement, the Orchestrator queues the TaskContext again for other workers. Workers are responsible for executing instructions and transferring data to and from remote computing resources. Any new capability eventually can be replicated on multiple workers. 
 
 \begin{figure}
-\includegraphics[height=1.4in, width=2.3 in]{figures/figure3.pdf}
+\centering
+\includegraphics[height=1.8in, width=1.8 in]{figures/figure3.pdf}
 \caption{Internal components of a Task Executor worker.}
 \end{figure}
 
@@ -184,6 +187,7 @@ Each of the components described above is deployed as an independent microservic
 We base this implementation on \cite{sadooghi2014achieving}. In this model, the orchestrator is not logically aware of existing workers, or of their capabilities; therefore it does not make informed decisions about which worker will execute a given task.  To execute a task, the orchestrator publishes a TaskContext to the respective task message queue for any worker to process. The orchestrator receives a response from a worker after execution of the assigned task - success or failure/exception, and then it acts on it accordingly.  
 
 \begin{figure*}
+\centering
 \includegraphics[height=3.8in, width=4.8 in]{figures/figure4.pdf}
 \caption{Example message queues and workers for the task pipeline shown in in Figure 2. Solid arrows represent publish events and dashed arrow represent subscribe events.}
 \end{figure*}
@@ -232,11 +236,13 @@ As a next step with this effort, we would like to explore emerging large scale d
 
 
 \section{CONCLUSIONS AND FUTURE WORK}
-We have been able to come up with a flexible solution for distributed task execution. Considering its advantages, we are hoping to integrate this design in current Apache Airavata architecture. However, before Airavata code can absorb this framework it needs to go through certain improvements. We are working through the prototype to make these improvements. 
+We have been able to come up with a flexible solution for distributed task execution. Considering its advantages, we are hoping to integrate this design in current Apache Airavata architecture. However, before Airavata code can absorb this framework it needs to go through rigorous testing cycles.
 
-In its current capacity, implemented prototype supports pull mechanism between scheduler and workers. Here, we are depending on messaging infrastructure (RabbitMQ) for delegating tasks to workers. This approach works well, but as we move ahead, systems might need to absorb surprising business demands.  Therefore, we prefer to retain control over task delegation rather than depending on third party technologies. The push mechanism would give better control over workers and task execution. One can think of using a matchmaking algorithm used by HTCondor where workers can advertise their capabilities in terms of task implementation, available memory, current load, CPU speed, etc.  In these situations the scheduler can match task requirements with available workers and assign tasks accordingly. Also, the scheduler can monitor node heartbeats to maintain workers states and can spin up new instances as required. Again, one can think of gossip protocol to communicate state and resource information. Serf is a widely used gossip protocol which inherently supports scalability and fault tolerance. 
+In its current capacity, the system supports pull mechanism between orchestrator and workers. Here, we are depending on messaging infrastructure (RabbitMQ) for delegating tasks to workers. This approach works well, but as we move ahead, systems might need to absorb surprising business demands.  Therefore, we prefer to retain control over task delegation rather than depending on third party technologies. The push mechanism would give better control over workers and task execution. One can think of using a matchmaking algorithm used by HTCondor where workers can advertise their capabilities in terms of task implementation, available memory, current load, CPU speed, etc.  In these situations the orchestrator can match task requirements with available workers and assign tasks accordingly. Also, the orchestrator can monitor node heartbeats to maintain workers? states and can spin up new instances as required. Again, one can think of gossip protocol to communicate state and resource information. Serf is a widely used gossip protocol which inherently supports scalability and fault tolerance.  
 
-Also in this prototype we have used RabbitMQ for communication between Orchestrator and Scheduler. Considering it could be a single point of failure one can think of using a more robust, scalable and fault tolerant messaging infrastructure. Kafka is a very good contender, and we are planning to come up with better communication infrastructure which would satisfy the needs of scalability and fault-tolerance, yet give a very good control over message flow.
+Also the system is open to adapt any new frameworks like Spark, Storm, Flink etc, which can handle resource management, fault tolerance, load balancing and communication between services. This would greatly offload Airavata from most of the orchestration and scheduling responsibilities.
+
+Currently, we are using RabbitMQ as an underlying message infrastructure, considering it could be a single point of failure one can think of using a more robust, scalable and fault tolerant messaging infrastructure. Kafka is a very good contender, and we are planning to come up with better communication infrastructure which would satisfy the needs of scalability and fault-tolerance, yet give a very good control over message flow.
 
 \bibliography{distributed-task-execution}
 
