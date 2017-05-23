@@ -60,7 +60,7 @@ In summary the diversity of these parallelism patterns is exemplified by the div
 \subsection{Apache Airavata and Distributed Components}
 Apache Airavata is open source science gateway middleware that has been described previously in \cite{pierce2014apache}\cite{marru2015apache}. Airavata is used to power production science gateways, but we also use it as a laboratory to explore cyberinfrastructure research and distributed computing problems, such as the work described here.
 
-Apache Airavata is designed to act as a multi-tenanted platform that can be used by multiple gateways simultaneously through a secure, well-defined API and data models that are defined using Apache Thrift.   In Airavata?s abstract architecture, we identify the following major components: a) the API server, which is the interface between Airavata and client gateways; b) the Registry, which serves as the repository for system metadata; c) the Task Executor (sometimes called GFAC), which manages the lifecycle of task executions on remote resources; and d) the Orchestrator, which converts abstract task execution requests into concrete requests and routes them to the specific Task Executors that can fulfill request.  Airavata uses third party services for managing user identity and securing client gateway-API Server connections.  
+Apache Airavata is designed to act as a multi-tenanted platform that can be used by multiple gateways simultaneously through a secure, well-defined API and data models that are defined using Apache Thrift.   In Airavata's abstract architecture, we identify the following major components: a) the API server, which is the interface between Airavata and client gateways; b) the Registry, which serves as the repository for system metadata; c) the Task Executor (sometimes called GFAC), which manages the lifecycle of task executions on remote resources; and d) the Orchestrator, which converts abstract task execution requests into concrete requests and routes them to the specific Task Executors that can fulfill request.  Airavata uses third party services for managing user identity and securing client gateway-API Server connections.  
 
 Components in Airavata may communicate by both messaging and direct RPC calls.  The Thrift-defined API includes data models that can be exchanged between components as well as between the gateway and the API server.  We have found in practice that hybrid notification-RPC communications work well: a component may be notified via the message bus to contact another component by direct call.
 
@@ -108,12 +108,12 @@ Figure 1 illustrates the basic approach. The Orchestrator and Task Executor (rig
 For the orchestrator, there are two considerations that arise here:
 \begin{itemize}
 \item How does the Orchestrator know or decide which worker to pass the task execution to?
-\item How do we upgrade a worker, say with a new task 'E' implementation, in such a manner that if something goes wrong with code for ?E?, the entire worker node should not fail? In short, avoid regression testing the entire worker module.
+\item How do we upgrade a worker, say with a new task 'E' implementation, in such a manner that if something goes wrong with code for 'E', the entire worker node should not fail. In short, avoid regression testing the entire worker module.
 \end{itemize}
 
 To address the first consideration, we adopted a paradigm similar to Apache Aurora \cite{apacheAurora}.  Apache Aurora agents (workers) report available capabilities to the Aurora master (scheduler). In Aurora, the slave nodes constantly report back to the master how much processing power they have; accordingly, the master decides which slave to pass a new job request to. In our case, we can have the workers advertise to the scheduler which tasks they are capable of executing and the scheduler uses this information to make a decision as to which worker will execute a particular task.
 Messaging systems such as those based on the AMQP specification can be used to offload orchestrator from scheduling part. We can delegate most of the responsibilities like service discovery, fault tolerance, and distributed coordination to a message infrastructure. This does mean however that the messaging system must be a highly available part of the system. Such coordination can also be accomplished with  frameworks like Apache Zookeeper \cite{hunt2010zookeeper} or Consul \cite{vargo2016consul}. We choose messaging approach implemented with RabbitMQ. 
-To address the second consideration, every worker node can have independent task modules, such that if there is a problem with one task, it can be ?repaired? without impacting other existing task implementations. Adding a new task implementation is simplified because each worker will report back to the orchestrator their capability to handle that new task. Likewise, new workers with new capabilities can be added to the system.  
+To address the second consideration, every worker node can have independent task modules, such that if there is a problem with one task, it can be repaired without impacting other existing task implementations. Adding a new task implementation is simplified because each worker will report back to the orchestrator their capability to handle that new task. Likewise, new workers with new capabilities can be added to the system.  
 
 Having a custom orchestrator also provides us benefits such as
 \begin{itemize}
@@ -128,7 +128,7 @@ The Orchestrator is considered to be a highly available service and tracks the s
 
 Our system is consists of loosely-coupled microservices. Each microservice performs closely related functionalities and gives away work to others. As this is a microservice inspired architecture, it inherently supports scalability. Multiple instances of each microservice can be employed for load balancing. With this architecture, availability of the component can be realized by scaling microservices horizontally. The messaging infrastructure is a critical component and represents a single point of failure. We thus identify reliable communication infrastructure as a key attribute of any fabric, or substrate, system that would run the Orchestrator and Task Executor. We use RabbitMQ in our implementation. 
 
-Our proposed design supports incremental upgrades; if a new task execution capability is added to a worker, other workers will continue to process task execution requests while the upgrade is in progress. Once the upgrade completes, this worker will now be able to accept and process requests for the new task type. Newly added capabilities are completely independent of existing ones, so the system does not require tedious regression testing. Also, these new capabilities can be incrementally replicated across multiple workers. As capabilities are added, Task Execution Pattern?s will be altered accordingly.  In other words, the system remains agnostic to any new implementations.
+Our proposed design supports incremental upgrades; if a new task execution capability is added to a worker, other workers will continue to process task execution requests while the upgrade is in progress. Once the upgrade completes, this worker will now be able to accept and process requests for the new task type. Newly added capabilities are completely independent of existing ones, so the system does not require tedious regression testing. Also, these new capabilities can be incrementally replicated across multiple workers. As capabilities are added, Task Execution Patterns will be altered accordingly.  In other words, the system remains agnostic to any new implementations.
 
 \section{IMPLEMENTATION AND EVALUATION}
 
@@ -144,10 +144,10 @@ The design is influenced by but not limited to specific task execution patterns 
 Figure 2 illustrates a very basic pipeline for executing a task on an HPC resource, which is an exemplary use case for many science gateways.  More complicated execution graphs can be built up from this basic sequence. The steps are as follows:
 \begin{itemize}
 \item environment setup - creating directories and load modules for a job
-\item staging input file ? stage user input files on remote cluster
-\item job execution ? execute job execution commands
-\item job status monitoring ? monitor status of a job until it finishes
-\item output data staging ? after successful execution of a job transfer outputs files back in local environment.
+\item staging input file - stage user input files on remote cluster
+\item job execution - execute job execution commands
+\item job status monitoring - monitor status of a job until it finishes
+\item output data staging - after successful execution of a job transfer outputs files back in local environment.
 \end{itemize}
 Each of these is accounted as an independent task in our design. For each individual experiment, these tasks are bundled into a Task Execution Pattern. An experiment refers to a user request to run an application on a remote machine. Each component of our design is explained below with reference to example task definitions listed above.
 
@@ -177,7 +177,7 @@ The worker depicted in Figure 3 has four task, A, B, C, and D. When the worker i
 We implement a work-queue pattern within our messaging system, with workers configured to serve one or more tasks. Based on configuration, corresponding message queue subscribers are employed to listen to incoming messages. These subscribers simply invoke respective task implementations. The purpose of having a separate handler is to decouple tasks from how messages are communicated to workers, which makes these tasks independent modules for other frameworks. As shown in Figure 3, when a worker is started with four tasks, the handler simply creates corresponding listeners which in turn invoke respective implementations. To support new task, a worker needs to start a new subscriber in the handler associated with the task. 
 Each task has a generic type and a more concrete implementation. Consider for example a Job Submission task, which can have different flavours with specific implementations for various remote clusters such as SLURM, Torque, HTCondor, and others. Even though this different flavors come under a same hood each maintains its own ecosystem. Each task type has single point of entry and from there control is passed to concrete implementation based on specific type mentioned in TaskContext. 
 
-\subsection{Scheduler - Worker interactions}
+\subsection{Orchestrator - Worker interactions}
 
 Each of the components described above is deployed as an independent microservice. Multiple instances of these components can be employed for fault tolerance and load balancing. RabbitMQ serves as message broker and sends data from one microservice to another.  Workers can be scaled horizontally to distribute load. Also, the tasks are embedded in such a way that each task can be scaled individually i.e. we can have multiple instances of particular task running on one machine. 
 
@@ -188,11 +188,11 @@ We base this implementation on \cite{sadooghi2014achieving}. In this model, the 
 \caption{Example message queues and workers for the task pipeline shown in in Figure 2. Solid arrows represent publish events and dashed arrow represent subscribe events.}
 \end{figure*}
 
-Let?s address simple execution pattern A -> B -> C -> D -> E using Figure 4.  Workers have different capabilities and listen to different channels:
+Let's address simple execution pattern A -> B -> C -> D -> E using Figure 4.  Workers have different capabilities and listen to different channels:
 \begin{itemize}
 \item Worker\#1 - Environment Setup, Data Staging (Input / Output), Job Submission
 \item Worker\#2 - Data Staging (Input / Output), Job Submission
-\item Worker\#3 ? Monitoring
+\item Worker\#3 - Monitoring
 \end{itemize}
 
 For simplicity, we annotate each task as follows:
@@ -213,14 +213,14 @@ By nature, a framework needs to be as generic as possible with well-defined inte
 The proposed design considers possibility of adapting to any new framework such as Spark, Flink, Mesos, Storm etc. The current framework uses RabbitMQ as a communication medium between orchestrator and workers. Here the framework specifically consists of part of an orchestrator which reacts to responses from worker and a handler in worker which accepts messages through RabbitMQ queues and calls respective task implementation.  
 
 \subsection{Deployment}
-We have discussed the validity, flexibility and robustness of the proposed framework. Now, it is important to consider deployment aspect for the same. The Orchestrator and the Task Executor?s workers are microservices and hence can be deployed independently of other services in ecosystem. These components are good candidates for containerization, which open another dimension for deployment. A worker can be easily manipulated to start with one or more tasks which indeed serves as a microservice. So, these workers can be containers with multiple capabilities installed. 
+We have discussed the validity, flexibility and robustness of the proposed framework. Now, it is important to consider deployment aspect for the same. The Orchestrator and the Task Executor's workers are microservices and hence can be deployed independently of other services in ecosystem. These components are good candidates for containerization, which open another dimension for deployment. A worker can be easily manipulated to start with one or more tasks which indeed serves as a microservice. So, these workers can be containers with multiple capabilities installed. 
 
 These containers can be installed on Mesos cluster which would provide inherent fault tolerance. We have experimentally deployed the ecosystem described here on the Data Center Operation System (DC/OS), which is based on the Apache Mesos distributed system kernel. DC/OS is a distributed infrastructure as a service which abstracts out multiple machines as if they were a single computer. It facilitates resource management, process placement, inter-process communication and simplifies the installation and management of distributed services. This environment is best suitable for our framework to ensure load handling, resource utilization and fault tolerance.  
 
 
 \section{RELATED WORK}
 
-As discussed in sections 2 and 3 various facets of task execution challenges have been addressed over time in discussed extensively in distributed systems literature. Cyberinfrastructure projects have implemented these concepts in software systems to varying degree of successes. The larger vision of Apache Airavata [REF Design Considerations paper] is to leverage on existing systems to manage distributed task executions. In this paper, we share our experiences in building a particular implementation which will help us identify the challenges and possible generalizations. While it is not appropriate at this point to do a ?apples to apples? comparison of this implementation with other platforms, we briefly discuss few projects who have tacked distributed task executions. 
+As discussed in sections 2 and 3 various facets of task execution challenges have been addressed over time in discussed extensively in distributed systems literature. Cyberinfrastructure projects have implemented these concepts in software systems to varying degree of successes. The larger vision of Apache Airavata [REF Design Considerations paper] is to leverage on existing systems to manage distributed task executions. In this paper, we share our experiences in building a particular implementation which will help us identify the challenges and possible generalizations. While it is not appropriate at this point to do a "apples to apples" comparison of this implementation with other platforms, we briefly discuss few projects who have tacked distributed task executions. 
 
 As an example, HTCondor offers a robust workload management system for compute-intensive jobs. It provides a job queueing mechanism, scheduling, priority scheme, monitoring, and resource management. HTCondor employs a matchmaking algorithm to schedule jobs on particular nodes \cite{coleman2001implementation}. It uses ClassAd mechanism for matching resource requests (jobs) with nodes \cite{coleman2003distributed}. Whenever a job is submitted to Condor, it states both the requirements and the preferences, such as required memory, name of the program to run, user who submitted the job, and a rank for the node that will run the job. Also, nodes advertise their capacities in terms of RAM, CPU type and speed, current load with other static and dynamic properties.
 
@@ -228,13 +228,13 @@ Schedulers continuously read all the job ClassAds and all the node ClassAds and 
 
 One class of Airavata problems could potentially be addressed with HTCondor. As discussed in Section 2,  Science Gateways (hence Airavata) support multiple application patterns and also support Data Intensive Computing style workloads. We however see HTCondor could be integrated with Airavata, not as a framework, but as an adaptor to broker job submissions to High Throughput Computing workloads.   
 
-As a next step with this effort, we would like to explore emerging large scale distributed systems like Apache Spark, Apache Storm and Apache Flink as viable alternative implementations to compare and potentially build upon to realize Airavata?s goals. 
+As a next step with this effort, we would like to explore emerging large scale distributed systems like Apache Spark, Apache Storm and Apache Flink as viable alternative implementations to compare and potentially build upon to realize Airavata's goals. 
 
 
 \section{CONCLUSIONS AND FUTURE WORK}
 We have been able to come up with a flexible solution for distributed task execution. Considering its advantages, we are hoping to integrate this design in current Apache Airavata architecture. However, before Airavata code can absorb this framework it needs to go through certain improvements. We are working through the prototype to make these improvements. 
 
-In its current capacity, implemented prototype supports pull mechanism between scheduler and workers. Here, we are depending on messaging infrastructure (RabbitMQ) for delegating tasks to workers. This approach works well, but as we move ahead, systems might need to absorb surprising business demands.  Therefore, we prefer to retain control over task delegation rather than depending on third party technologies. The push mechanism would give better control over workers and task execution. One can think of using a matchmaking algorithm used by HTCondor where workers can advertise their capabilities in terms of task implementation, available memory, current load, CPU speed, etc.  In these situations the scheduler can match task requirements with available workers and assign tasks accordingly. Also, the scheduler can monitor node heartbeats to maintain workers? states and can spin up new instances as required. Again, one can think of gossip protocol to communicate state and resource information. Serf is a widely used gossip protocol which inherently supports scalability and fault tolerance. 
+In its current capacity, implemented prototype supports pull mechanism between scheduler and workers. Here, we are depending on messaging infrastructure (RabbitMQ) for delegating tasks to workers. This approach works well, but as we move ahead, systems might need to absorb surprising business demands.  Therefore, we prefer to retain control over task delegation rather than depending on third party technologies. The push mechanism would give better control over workers and task execution. One can think of using a matchmaking algorithm used by HTCondor where workers can advertise their capabilities in terms of task implementation, available memory, current load, CPU speed, etc.  In these situations the scheduler can match task requirements with available workers and assign tasks accordingly. Also, the scheduler can monitor node heartbeats to maintain workers states and can spin up new instances as required. Again, one can think of gossip protocol to communicate state and resource information. Serf is a widely used gossip protocol which inherently supports scalability and fault tolerance. 
 
 Also in this prototype we have used RabbitMQ for communication between Orchestrator and Scheduler. Considering it could be a single point of failure one can think of using a more robust, scalable and fault tolerant messaging infrastructure. Kafka is a very good contender, and we are planning to come up with better communication infrastructure which would satisfy the needs of scalability and fault-tolerance, yet give a very good control over message flow.
 
